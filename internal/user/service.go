@@ -2,7 +2,7 @@ package user
 
 
 import (
-	"github.com/Retual004/task-service/"
+	// "github.com/Retual004/task-service/"
 )
 
 type UserService struct {
@@ -17,8 +17,8 @@ func (s *UserService) CreateUser(user User) (User, error) {
 	return s.repo.CreateUser(user)
 }
 
-func (s *UserService) GetAllUsers() ([]User, error) {
-	return s.repo.GetAllUsers()
+func (s *UserService) ListUsers() ([]User, error) {
+	return s.repo.ListUsers()
 }
 
 func (s *UserService) UpdateUserByID(id uint, user User) (User, error) {
@@ -29,10 +29,11 @@ func (s *UserService) DeleteUserByID(id uint) error {
 	return s.repo.DeleteUserByID(id)
 }
 
-func (s *UserService)GetTasksForUser(userID uint) ([]task.Task, error) {
-    return s.repo.GetTasksForUser(userID)
-}
+// func (s *UserService)GetTasksForUser(userID uint) ([]task.Task, error) {
+//     return s.repo.GetTasksForUser(userID)
+// }
 
 func (s *UserService) GetUserByID(id uint) (User, error) {
     return s.repo.GetUserByID(id)
 }
+

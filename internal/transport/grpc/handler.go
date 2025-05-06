@@ -41,15 +41,17 @@ func (h *Handler) CreateUser(ctx context.Context, req *userpb.CreateUserRequest)
 }
 
 // GetUser
-func (h *Handler) GetUser(ctx context.Context, req *userpb.User) (*userpb.User, error) {
+func (h *Handler) GetUser(ctx context.Context, req *userpb.User) (*userpb.GetUserResponse, error) {
 	u, err := h.svc.GetUserByID(uint(req.Id))
 	if err != nil {
 		return nil, err
 	}
-	return &userpb.User{
-		Id:       uint32(u.ID),
-		Email:    u.Email,
+	return &userpb.GetUserResponse{
+	User: &userpb.User{
+		Id : uint32(u.ID),
+		Email: u.Email,
 		Password: u.Password,
+	},
 	}, nil
 }
 
@@ -73,9 +75,26 @@ func (h *Handler) UpdateUser(ctx context.Context, req *userpb.UpdateUserRequest)
 }
 
 // DeleteUser
-func (h *Handler) DeleteUser(ctx context.Context, req *userpb.DeleteUserRequest) (*emptypb.Empty, error) {
+func (h *Handler) DeleteUser(ctx context.Context, req *userpb.DeleteUserRequest) (*userpb.DeleteUserResponse, error) {
 	if err := h.svc.DeleteUserByID(uint(req.Id)); err != nil {
 		return nil, err
 	}
-	return &emptypb.Empty{}, nil
+	return &userpb.DeleteUserResponse{}, nil
 }
+
+
+func (h *Handler) ListUsers(ctx context.Context, _ *emptypb.Empty) (*userpb.ListUsersResponse, error) {
+	users, err := h.svc.ListUsers()
+	if err != nil {
+	  return nil, err
+	}
+	var pbUsers []*userpb.User
+	for _, u := range users {
+	  pbUsers = append(pbUsers, &userpb.User{
+		Id:       uint32(u.ID),
+		Email:    u.Email,
+		Password: u.Password,
+	  })
+	}
+	return &userpb.ListUsersResponse{Users: pbUsers}, nil
+  }
